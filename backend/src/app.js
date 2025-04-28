@@ -15,11 +15,11 @@ app.use(express.urlencoded({limit: '25kb', extended: true}))
 app.use(cookieParser())
 
 //route import
-import homeRouter from './routes/user.routes.js'
-import userRouter from './routes/home.routes.js'
+import userRouter from './routes/user.routes.js'
+import homeRouter from './routes/home.routes.js'
 
 //route declaration
 app.use("/api/v1", homeRouter)
-app.use("/api/v1", userRouter)
+app.use("/api/v1/user", userRouter)
 
 export default app
