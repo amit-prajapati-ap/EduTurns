@@ -23,7 +23,7 @@ const clerkWebhooks = asyncHandler(async (req,res) => {
                 {
                     const userData = {
                         _id: data.id,
-                        email: data.email.address[0].email_address,
+                        email: data.email.addresses[0].email_address,
                         name: data.first_name + " " + data.last_name,
                         imageUrl: data.image_url
                     }
@@ -34,7 +34,7 @@ const clerkWebhooks = asyncHandler(async (req,res) => {
             case 'user.updated':
                 {
                     const userData = {
-                        email: data.email.address[0].email_address,
+                        email: data.email.addresses[0].email_address,
                         name: data.first_name + " " + data.last_name,
                         imageUrl: data.image_url
                     }
