@@ -16,7 +16,7 @@ const clerkWebhooks = asyncHandler(async (req,res) => {
             "svix-signature": req.headers["svix-signature"]
         })
 
-        const {data, type} = req.body
+        const {type} = req.body
         console.log(data)
 
         switch (type) {
