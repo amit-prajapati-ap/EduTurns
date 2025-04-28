@@ -18,6 +18,6 @@ app.use(cookieParser())
 import homeRouter from './routes/home.routes.js'
 
 //route declaration
-app.use("/api/v1/home", homeRouter)
+app.use("", homeRouter)
 
 export default app
