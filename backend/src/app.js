@@ -19,5 +19,6 @@ import homeRouter from './routes/home.routes.js'
 
 //route declaration
 app.use("/api/v1", homeRouter)
+app.use("", homeRouter)
 
 export default app
