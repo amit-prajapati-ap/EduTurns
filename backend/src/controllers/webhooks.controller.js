@@ -1,12 +1,11 @@
 import { Webhook } from 'svix'
 import { User } from '../models/user.model.js'
-import { asyncHandler } from '../utils/asyncHandler.js'
 import { ApiResponse } from '../utils/ApiResponse.js'
 import { ApiError } from '../utils/ApiError.js'
 
 //API Controller Function to Manage Clerk user with db
 
-const clerkWebhooks = asyncHandler(async (req,res) => {
+const clerkWebhooks = async (req, res) => {
     try {
         const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
 
@@ -16,8 +15,7 @@ const clerkWebhooks = asyncHandler(async (req,res) => {
             "svix-signature": req.headers["svix-signature"]
         })
 
-        const {type} = req.body
-        console.log(data)
+        const { data, type } = req.body;
 
         switch (type) {
             case 'user.created':
@@ -29,7 +27,7 @@ const clerkWebhooks = asyncHandler(async (req,res) => {
                         imageUrl: data.image_url
                     }
                     await User.create(userData)
-                    res.status(200).json(new ApiResponse(200, {}, 'User Created Successfully'))
+                    res.json({})
                     break;
                 }
             case 'user.updated':
@@ -39,23 +37,23 @@ const clerkWebhooks = asyncHandler(async (req,res) => {
                         name: data.first_name + " " + data.last_name,
                         imageUrl: data.image_url
                     }
-                    await User.findByIdAndUpdate(data.id,userData)
-                    res.status(200).json(new ApiResponse(200, {}, 'User Data Updated Successfully'))
+                    await User.findByIdAndUpdate(data.id, userData)
+                    res.json({})
                     break;
                 }
             case 'user.deleted':
                 {
                     await User.findByIdAndDelete(data.id)
-                    res.status(200).json(new ApiResponse(200, {}, 'User Data Deleted Successfully'))
+                    res.json({})
                     break;
                 }
-        
+
             default:
                 break;
         }
     } catch (error) {
         res.status(500).json(new ApiError(500, error.message, Array(error)))
     }
-})
+}
 
-export {clerkWebhooks}
+export { clerkWebhooks }

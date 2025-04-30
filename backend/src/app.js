@@ -1,25 +1,13 @@
 import express from 'express'
 import cors from 'cors'
-import cookieParser from 'cookie-parser'
+import 'dotenv/config'
+import { clerkWebhooks } from './controllers/webhooks.controller.js'
 
 const app = express()
 
-app.use(cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true
-}))
+app.use(cors())
 
-app.use(express.json({limit: '25kb'}))
-app.use(express.static('public'))
-app.use(express.urlencoded({limit: '25kb', extended: true}))
-app.use(cookieParser())
-
-//route import
-import userRouter from './routes/user.routes.js'
-import homeRouter from './routes/home.routes.js'
-
-//route declaration
-app.use("/api/v1", homeRouter)
-app.use("/api/v1/user", userRouter)
+app.get('/', (req,res) => res.send("API working"))
+app.post('/clerk', express.json(), clerkWebhooks)
 
 export default app
