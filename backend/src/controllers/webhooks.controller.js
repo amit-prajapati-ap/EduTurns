@@ -52,7 +52,7 @@ const clerkWebhooks = async (req, res) => {
                 break;
         }
     } catch (error) {
-        res.status(500).json(new ApiError(500, error.message, Array(error)))
+        res.json(new ApiError(500, error.message, Array(error)))
     }
 }
 
