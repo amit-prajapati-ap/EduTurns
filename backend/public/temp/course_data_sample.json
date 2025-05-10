@@ -1,0 +1,55 @@
+{
+    "courseTitle": "Introduction to JavaScript",
+    "courseDescription": "Course description",
+    "coursePrice": 49.99,
+    "isPublished": true,
+    "discount": 20,
+    "courseContent": [
+        {
+            "chapterId": "chapter1",
+            "chapterOrder": 1,
+            "chapterTitle": "Getting Started with JavaScript",
+            "chapterContent": [
+                {
+                    "lectureId": "lecture1",
+                    "lectureTitle": "What is JavaScript?",
+                    "lectureDuration": 16,
+                    "lectureUrl": "https://youtu.be/CBWnBi-awSA",
+                    "isPreviewFree": true,
+                    "lectureOrder": 1
+                },
+                {
+                    "lectureId": "lecture2",
+                    "lectureTitle": "Setting Up Your Environment",
+                    "lectureDuration": 19,
+                    "lectureUrl": "https://youtu.be/4l87c2aeB4I",
+                    "isPreviewFree": false,
+                    "lectureOrder": 2
+                }
+            ]
+        },
+        {
+            "chapterId": "chapter2",
+            "chapterOrder": 2,
+            "chapterTitle": "Variables and Data Types",
+            "chapterContent": [
+                {
+                    "lectureId": "lecture3",
+                    "lectureTitle": "Understanding Variables",
+                    "lectureDuration": 20,
+                    "lectureUrl": "https://youtu.be/pZQeBJsGoDQ",
+                    "isPreviewFree": true,
+                    "lectureOrder": 1
+                },
+                {
+                    "lectureId": "lecture4",
+                    "lectureTitle": "Data Types in JavaScript",
+                    "lectureDuration": 10,
+                    "lectureUrl": "https://youtu.be/ufHT2WEkkC4",
+                    "isPreviewFree": false,
+                    "lectureOrder": 2
+                }
+            ]
+        }
+    ]
+}

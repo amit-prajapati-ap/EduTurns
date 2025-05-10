@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/student/Home";
 import CoursesList from "./pages/student/CoursesList";
@@ -14,6 +14,9 @@ import MyCourses from "./pages/educator/MyCourses";
 import StudentsEnrolled from "./pages/educator/StudentsEnrolled";
 import PageNotFound from "./components/PageNotFound";
 import "quill/dist/quill.snow.css";
+import { setToken } from "./features/AppContextSlice.js";
+import { useAuth, useUser } from "@clerk/clerk-react";
+import { useDispatch } from "react-redux";
 
 const router = createBrowserRouter([
   {
@@ -105,6 +108,21 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
+  const dispatch = useDispatch();
+  const { getToken } = useAuth();
+  const { user } = useUser();
+  const fetchAndSetToken = () => {
+    return getToken().catch((error) => {
+      console.error("Failed to fetch token:", error);
+    });
+  };
+  
+  fetchAndSetToken().then((token) => {
+    if (token) {
+      dispatch(setToken({ token, user }));
+    }
+  });
+
   return (
     <div className="min-h-screen bg-white">
       <RouterProvider router={router} />

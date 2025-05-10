@@ -6,6 +6,8 @@ const initialState = {
         allCourses: dummyCourses,
         isEducator: true,
         enrolledCourses: dummyCourses,
+        getToken: undefined,
+        user: undefined,
         menuItems: [
             {
               name: 'Dashboard', path: '/educator', icon: assets.home_icon
@@ -33,10 +35,14 @@ const AppContextSlice = createSlice({
         },
         fetchUserEnrolledCourses: (state, action) => {
             state.appData.enrolledCourses = action.payload
+        },
+        setToken: (state, action) => {
+          state.appData.getToken = action.payload.token;
+          state.appData.user = action.payload.user
         }
      },
 });
 
-export const { setIsEducator, fetchUserEnrolledCourses } = AppContextSlice.actions;
+export const { setIsEducator, fetchUserEnrolledCourses, setToken } = AppContextSlice.actions;
 
 export default AppContextSlice.reducer;
