@@ -24,8 +24,12 @@ app.use(express.static('public'))
 
 //Route declaration
 import educatorRouter from './routes/educator.routes.js'
+import courseRouter from './routes/course.routes.js'
+import userRouter from './routes/user.routes.js'
 
 //Route definition
 app.use('/api/v1/educator', educatorRouter)
+app.use('/api/v1/course', courseRouter)
+app.use('/api/v1/user', userRouter)
 
 export default app

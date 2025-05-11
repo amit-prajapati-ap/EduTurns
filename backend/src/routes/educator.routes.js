@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addCourse, getEducatorCourses, updateRoleToEducator } from "../controllers/educator.controller.js";
+import { addCourse, getEducatorCourses, getEducatorDashboardData, getEnrolledStudentsData, updateRoleToEducator } from "../controllers/educator.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { protectEducator } from "../middlewares/auth.middleware.js";
 
@@ -12,5 +12,7 @@ router.route('/add-course').post(upload.fields([{ name: 'courseThumbnail', maxCo
 addCourse)
 
 router.route('/courses').get(protectEducator, getEducatorCourses)
+router.route('/dashboard').get(protectEducator, getEducatorDashboardData)
+router.route('/enrolled-students').get(protectEducator, getEnrolledStudentsData)
 
 export default router

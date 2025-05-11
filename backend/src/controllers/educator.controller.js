@@ -10,10 +10,9 @@ import { User } from '../models/user.model.js'
 const updateRoleToEducator = asyncHandler(async (req, res) => {
     try {
         const userId = req.auth.userId || req.headers.userId
-        console.log(userId)
 
         if (!userId) {
-            throw new ApiError(400, "Unauthorized user")
+           return res.status(401).json(new ApiError(401, `Unauthorized Access`))
         }
 
         await clerkClient.users.updateUserMetadata(userId, {
@@ -35,7 +34,7 @@ const addCourse = async (req, res) => {
         let courseThumbnailLocalPath
 
         if (!courseData) {
-            throw new ApiError(400, "Course data is required")
+           return res.status(400).json(new ApiError(400, `Course data is required`))
         }
 
         if (req.files && req.files.courseThumbnail && req.files.courseThumbnail[0].path) {
@@ -43,7 +42,7 @@ const addCourse = async (req, res) => {
         }
 
         if (!courseThumbnailLocalPath) {
-            throw new ApiError(400, "Thumbnail not attached")
+           return res.status(400).json(new ApiError(400, `Thumbnail not attached`))
         }
 
         const parsedCourseData = await JSON.parse(courseData)
@@ -55,7 +54,7 @@ const addCourse = async (req, res) => {
         const courseThumbnail = await uploadOnCloudinary(courseThumbnailLocalPath)
 
         if (!courseThumbnail) {
-            throw new ApiError(400, "Error while uploading course thumbnail")
+           return res.status(400).json(new ApiError(400, `Error while uploading course thumbnail`))
         }
 
         newCourse.courseThumbnail = courseThumbnail.url
@@ -123,4 +122,27 @@ const getEducatorDashboardData = asyncHandler(async (req, res) => {
     }
 })
 
-export { updateRoleToEducator, addCourse, getEducatorCourses, getEducatorDashboardData }
+const getEnrolledStudentsData = asyncHandler(async (req, res) => {
+    try {
+        const educator = req.auth.userId
+        const courses = await Course.find({ educator })
+        const courseIds = courses.map(course => course._id)
+
+        const purchases = await Purchase.find({
+            courseId: { $in: courseIds },
+            status: 'completed'
+        }).populate('userId', 'name imageUrl').populate('courseId', 'courseTitle')
+
+        const enrolledStudents = purchases.map(purchase => ({
+            student: purchase.userId,
+            courseTitle: purchase.courseId.courseTitle,
+            purchaseDate: purchase.createdAt
+        }));
+
+        res.status(200).json(new ApiResponse(200, enrolledStudents, "Enrolled students data fetched successfully"))
+
+    } catch (error) {
+        res.status(500).json(new ApiError(500, `Server error occured while fetching the data for enrolled students in the course :: ${error.message} ::`, error))
+    }
+})
+export { updateRoleToEducator, addCourse, getEducatorCourses, getEducatorDashboardData, getEnrolledStudentsData }
