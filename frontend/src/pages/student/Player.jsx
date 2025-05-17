@@ -23,8 +23,10 @@ const Player = () => {
     courseRating = calculateRating(courseData?.courseRatings);
   }
 
-  const fetchCourseData = async () => {
-    setCourseData(allCourses.find((course) => course._id === courseId));
+  const fetchCourseData = () => {
+    if (allCourses) {
+      setCourseData(allCourses.find((course) => course._id === courseId));
+    }
   };
 
   const toggleSection = (index) => {
@@ -37,6 +39,7 @@ const Player = () => {
 
   return courseData ? (
     <div className="min-h-[80vh] p-4 sm:p-10 flex flex-col-reverse md:grid md:grid-cols-2 gap-10 md:px-36">
+      {console.log(courseData.courseContent)}
       {/* Left Column */}
       <div className="text-gray-800">
         <h2 className="font-semibold text-xl">Course Structure</h2>
@@ -112,7 +115,7 @@ const Player = () => {
         </div>
         <div className="flex items-center gap-2 py-3 mt-10">
           <h1 className="text-xl font-bold">Rate this Course:</h1>
-        <Rating initialRating={0}/>
+          <Rating initialRating={0} />
         </div>
       </div>
 
@@ -121,12 +124,17 @@ const Player = () => {
         {playerData ? (
           <div className="md:mt-10">
             <YouTube
-              videoId={playerData.lectureUrl.split('/').pop()}
+              videoId={playerData.lectureUrl.split("/").pop()}
               iframeClassName="w-full aspect-video"
             />
             <div className="flex justify-between items-center mt-1">
-              <p>{playerData.chapter}.{playerData.lecture} {playerData.lectureTitle}</p>
-              <button className="text-blue-600 cursor-pointer">{false ? 'Completed' : 'Mark Complete'}</button>
+              <p>
+                {playerData.chapter}.{playerData.lecture}{" "}
+                {playerData.lectureTitle}
+              </p>
+              <button className="text-blue-600 cursor-pointer">
+                {false ? "Completed" : "Mark Complete"}
+              </button>
             </div>
           </div>
         ) : (

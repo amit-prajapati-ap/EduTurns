@@ -5,8 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 const getAllCourses = asyncHandler(async (_, res) => {
     try {
-        const courses = await Course.find({ isPublished: true }).select('-courseContent -enrolledStudents').populate({ path: 'educator' })
-        console.log(courses)
+        const courses = await Course.find({ isPublished: true }).populate({ path: 'educator' })
 
         res.status(200).json(new ApiResponse(200, courses, "All courses data fetched successfully"))
     } catch (error) {

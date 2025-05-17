@@ -3,9 +3,10 @@ import { assets, dummyCourses } from "../assets/assets";
 
 const initialState = {
     appData: {
-        allCourses: dummyCourses,
-        isEducator: true,
-        enrolledCourses: dummyCourses,
+        allCourses: [],
+        isEducator: false,
+        userData: null,
+        enrolledCourses: [],
         getToken: undefined,
         user: undefined,
         menuItems: [
@@ -33,7 +34,13 @@ const AppContextSlice = createSlice({
         setIsEducator: (state, action) => {
             state.appData.isEducator = action.payload
         },
-        fetchUserEnrolledCourses: (state, action) => {
+        setUserData: (state, action) => {
+            state.appData.userData = action.payload
+        },
+        setAllCourses: (state, action) => {
+            state.appData.allCourses = action.payload.allCourses
+        },
+        setUserEnrolledCourses: (state, action) => {
             state.appData.enrolledCourses = action.payload
         },
         setToken: (state, action) => {
@@ -43,6 +50,6 @@ const AppContextSlice = createSlice({
      },
 });
 
-export const { setIsEducator, fetchUserEnrolledCourses, setToken } = AppContextSlice.actions;
+export const { setIsEducator, setUserEnrolledCourses, setToken, setAllCourses, setUserData } = AppContextSlice.actions;
 
 export default AppContextSlice.reducer;

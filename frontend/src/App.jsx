@@ -14,9 +14,21 @@ import MyCourses from "./pages/educator/MyCourses";
 import StudentsEnrolled from "./pages/educator/StudentsEnrolled";
 import PageNotFound from "./components/PageNotFound";
 import "quill/dist/quill.snow.css";
-import { setToken } from "./features/AppContextSlice.js";
+import {
+  setAllCourses,
+  setIsEducator,
+  setToken,
+  setUserData,
+  setUserEnrolledCourses,
+} from "./features/AppContextSlice.js";
 import { useAuth, useUser } from "@clerk/clerk-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllCourses,
+  fetchUserData,
+  fetchUserEnrolledCourses,
+} from "./utilityFunctions/apiCalls.js";
+import { ToastContainer } from "react-toastify";
 
 const router = createBrowserRouter([
   {
@@ -109,6 +121,7 @@ const router = createBrowserRouter([
 
 const App = () => {
   const dispatch = useDispatch();
+
   const { getToken } = useAuth();
   const { user } = useUser();
   const fetchAndSetToken = () => {
@@ -116,15 +129,38 @@ const App = () => {
       console.error("Failed to fetch token:", error);
     });
   };
-  
+
   fetchAndSetToken().then((token) => {
     if (token) {
       dispatch(setToken({ token, user }));
     }
   });
 
+  //API Calls without token
+  fetchAllCourses().then((res) => {
+    dispatch(setAllCourses({ allCourses: res }));
+  });
+
+  //API Calls with token
+  const token = useSelector((state) => state.appContext.appData.getToken);
+  useEffect(() => {
+    if (token) {
+      fetchUserData(token).then((res) => {
+        if (user.publicMetadata.role === "educator") {
+          dispatch(setIsEducator(true));
+        }
+        dispatch(setUserData(res));
+      });
+
+      fetchUserEnrolledCourses(token).then((res) => {
+        dispatch(setUserEnrolledCourses(res));
+      });
+    }
+  }, [token]);
+
   return (
     <div className="min-h-screen bg-white">
+      <ToastContainer />
       <RouterProvider router={router} />
     </div>
   );

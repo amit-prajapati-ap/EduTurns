@@ -6,5 +6,5 @@ export const calculateRating = ( courseRatings ) => {
     courseRatings.forEach(rating => {
         totalRating += rating.rating
     })
-    return totalRating / courseRatings.length
+    return Math.floor(totalRating / courseRatings.length)
 }
