@@ -94,7 +94,6 @@ const getEducatorDashboardData = asyncHandler(async (req, res) => {
         })
 
         const totalEarnings = purchases.reduce((sum, purchase) => sum + purchase.amount, 0)
-        console.log(totalEarnings)
 
         // Collect unique enrolled student IDs with their course titles
         const enrolledStudentData = []
