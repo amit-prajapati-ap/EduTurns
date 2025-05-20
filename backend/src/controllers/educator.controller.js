@@ -93,16 +93,17 @@ const getEducatorDashboardData = asyncHandler(async (req, res) => {
             status: 'completed',
         })
 
-        const totalEarnings = purchases.reduce((sum, purchase) => sum + purchase, 0)
+        const totalEarnings = purchases.reduce((sum, purchase) => sum + purchase.amount, 0)
+        console.log(totalEarnings)
 
         // Collect unique enrolled student IDs with their course titles
-        const ernrolledStudentData = []
+        const enrolledStudentData = []
         for (const course of courses) {
             const students = await User.find({
                 _id: { $in: course.enrolledStudents }
             }, 'name imageUrl')
             students.forEach(student => {
-                ernrolledStudentData.push({
+                enrolledStudentData.push({
                     courseTitle: course.courseTitle,
                     student
                 })
@@ -111,7 +112,7 @@ const getEducatorDashboardData = asyncHandler(async (req, res) => {
 
         const dashboardData = {
             totalEarnings,
-            ernrolledStudentData,
+            enrolledStudentData,
             totalCourses
         }
 

@@ -176,6 +176,7 @@ export const markLectureAsCompleted = async ({ token, lectureId, courseId }) => 
         return null
     }
 }
+
 export const rateTheCourse = async ({ token, courseId, rating }) => {
     try {
         const { data } = await axios.post(backendUrl + '/api/v1/user/add-rating', { courseId, rating }, { headers: { Authorization: `Bearer ${token}` } })
@@ -194,6 +195,73 @@ export const rateTheCourse = async ({ token, courseId, rating }) => {
 
     } catch (error) {
         toast.error(error.message)
+        return null
+    }
+}
+
+export const addNewCourse = async({courseData, image, token}) => {
+    try {
+        if (!image) {
+            toast.warn("Thumbnail Not Selected")
+            return false
+        }
+        const formData = new FormData()
+        formData.append('courseData', JSON.stringify(courseData))
+        formData.append('courseThumbnail', image)
+
+        const {data} = await axios.post(backendUrl + '/api/v1/educator/add-course', formData, { headers: { Authorization: `Bearer ${token}` } })
+
+        if (data.statusCode === 200) {
+            toast.success(data.message)
+            return true
+        } else {
+            toast.error(data.message)
+            return false
+        }
+    } catch (error) {
+        toast.error(error.message)
+        return false
+    }
+}
+
+export const fetchEducatorCourses = async(token) => {
+    try {
+        const {data} = await axios.get(backendUrl + '/api/v1/educator/courses', {headers: {Authorization: `Bearer ${token}`}})
+
+        if (data.statusCode === 200) {
+            return data.data
+        } else {
+            return null
+        }
+    } catch (error) {
+        return null
+    }
+}
+
+export const fetchEnrolledUsers = async({token}) => {
+    try {
+        const {data} = await axios.get(backendUrl + '/api/v1/educator/enrolled-students', {headers: {Authorization: `Bearer ${token}`}})
+
+        if (data.statusCode === 200) {
+            return data.data
+        } else {
+            return null
+        }
+    } catch (error) {
+        return null
+    }
+}
+
+export const fetchDashboardData = async({token}) => {
+    try {
+        const {data} = await axios.get(backendUrl + '/api/v1/educator/dashboard', {headers: {Authorization: `Bearer ${token}`}})
+
+        if (data.statusCode === 200) {
+            return data.data
+        } else {
+            return null
+        }
+    } catch (error) {
         return null
     }
 }

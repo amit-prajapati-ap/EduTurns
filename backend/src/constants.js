@@ -1,2 +1,2 @@
 export const DB_NAME = "eduturns"
-export const CURRENCY = 'USD'
+export const CURRENCY = 'INR'

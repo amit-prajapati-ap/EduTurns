@@ -19,7 +19,7 @@ const lectureSchema = new Schema({
     },
     isPreviewFree: {
         type: Boolean,
-        required: true
+        default: false
     },
     lectureOrder: {
         type: Number,

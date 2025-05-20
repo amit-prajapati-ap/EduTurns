@@ -3,11 +3,12 @@ import { useSelector } from 'react-redux'
 import { calculateCourseDuration } from '../../utilityFunctions/calculateCourseDuration'
 import { useNavigate } from 'react-router-dom'
 import {Line} from 'rc-progress'
-import { fetchCoursesProgress } from '../../utilityFunctions/apiCalls'
+import { fetchCoursesProgress, fetchUserEnrolledCourses } from '../../utilityFunctions/apiCalls'
 import Loading from '../../components/student/Loading'
 
 const MyEnrollments = () => {
-  const {enrolledCourses, getToken} = useSelector((state) => state.appContext.appData)
+  const { getToken } = useSelector((state) => state.appContext.appData)
+  const [enrolledCourses, setEnrolledCourses] = useState([])
   const [progressArray, setProgressArray] = useState(null)
   const navigate = useNavigate()
 
@@ -16,7 +17,12 @@ const MyEnrollments = () => {
   }
 
   React.useEffect(() => {
-    if (enrolledCourses.length > 0) {      
+    fetchUserEnrolledCourses(getToken).then(res => {
+      setEnrolledCourses(res)
+    })
+  },[])
+  React.useEffect(() => {
+    if (enrolledCourses?.length > 0) {
       fetchCoursesProgress({token: getToken, enrolledCourses}).then(res => {
         setProgressArray(res)
       })
@@ -37,7 +43,7 @@ const MyEnrollments = () => {
         </thead>
 
         <tbody className='text-gray-700'>
-          {enrolledCourses.map((course, index) => (
+          {enrolledCourses?.map((course, index) => (
             <tr className='border-b border-gray-500/20' key={index}>
               <td className='md:px-4 pl-2 md:pl-4 py-3 flex items-center space-x-3'>
                 <img src={course.courseThumbnail} className='w-14 sm:w-24

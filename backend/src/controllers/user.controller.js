@@ -26,7 +26,10 @@ const getUserData = asyncHandler(async (req, res) => {
 
 const getUserEnrolledCourses = asyncHandler(async (req, res) => {
     try {
-        const userId = req.auth.userId
+        const userId = req?.auth?.userId
+        if (!userId) {
+            return res.status(401).json(new ApiError(401, "Unauthorized Access"))
+        }
 
         const userData = await User.findById(userId).populate('enrolledCourses')
 
@@ -128,7 +131,6 @@ const getUserCourseProgress = asyncHandler(async (req, res) => {
         const userId = req.auth.userId
         const { courseId } = req.body
         const progressData = await CourseProgress.findOne({ userId, courseId })
-        console.log(progressData)
 
         res.status(200).json(new ApiResponse(200, progressData, "User course progress fetched successfully!"))
     } catch (error) {

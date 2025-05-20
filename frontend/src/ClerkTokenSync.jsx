@@ -10,7 +10,7 @@ export const ClerkTokenSync = () => {
 
   useEffect(() => {
     const syncToken = async () => {
-      console.log("Runned")
+      console.log("Token Refreshed")
       try {
         const token = await getToken(); // By default, gets session token
         dispatch(setToken({token, user}));
@@ -23,7 +23,7 @@ export const ClerkTokenSync = () => {
 
     const interval = setInterval(() => {
       syncToken();
-    }, 1 * 50 * 1000); // every 1 mins
+    }, 40 * 1000); // every 40 Seconds
 
     return () => clearInterval(interval);
   }, [getToken, dispatch]);

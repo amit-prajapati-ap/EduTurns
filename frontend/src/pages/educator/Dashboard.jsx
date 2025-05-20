@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { assets, dummyDashboardData } from "../../assets/assets";
+import { assets } from "../../assets/assets";
 import Loading from "../../components/student/Loading";
+import { fetchDashboardData } from "../../utilityFunctions/apiCalls";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
-
-  const fetchDashboardData = async () => {
-    setDashboardData(dummyDashboardData);
-  };
+  const { getToken, isEducator } = useSelector(
+    (state) => state.appContext.appData
+  );
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    if (isEducator) {
+      fetchDashboardData({token: getToken}).then(res => {
+        console.log(res)
+        setDashboardData(res)
+      })
+    }
+  }, [isEducator]);
 
   return dashboardData ? (
     <div className="min-h-[90vh] flex flex-col items-start justify-between gap-8 md:p-8 md:pb-0 p-4 pt-8 pb-0">
@@ -21,7 +27,7 @@ const Dashboard = () => {
             <img src={assets.patients_icon} />
             <div>
               <p className="text-2xl font-medium text-gray-600">
-                {dashboardData.enrolledStudentsData.length}
+                {dashboardData.enrolledStudentData.length}
               </p>
               <p className="text-base text-gray-500">Total Enrollments</p>
             </div>
@@ -61,14 +67,14 @@ const Dashboard = () => {
               </thead>
 
               <tbody className="text-sm text-gray-500">
-                {dashboardData.enrolledStudentsData.map((item, index) => (
+                {dashboardData.enrolledStudentData.map((item, index) => (
                   <tr key={index} className="border-b border-gray-500/20">
                     <td className="px-4 py3 text-center hidden sm:table-cell">{index + 1}</td>
                     <td className="md:px-4 px-2 py-3 flex items-center space-x-3">
-                      <img src={item.student.imageUrl} className="w-7 h-12 rounded-full" />
+                      <img src={item.student.imageUrl} className="w-8 h-8 rounded-full" />
                       <span className="truncate">{item.student.name}</span>
                     </td>
-                    <td className="px-4 py-3 truncate">{item.courseTitle}</td>
+                    <td className="px-4 py-2 truncate">{item.courseTitle}</td>
                   </tr>
                 ))}
               </tbody>
