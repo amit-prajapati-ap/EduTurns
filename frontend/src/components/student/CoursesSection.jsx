@@ -1,12 +1,23 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import CourseCard from './CourseCard'
 import { useSelector } from 'react-redux'
+import { fetchAllCourses } from '../../utilityFunctions/apiCalls.js'
 
 const CoursesSection = () => {
-  const allCourses = useSelector((state) => state.appContext.appData.allCourses)
+  const [allCourses, setAllCourses] = useState(null)
+  const location = useLocation();
 
-  return (
+  useEffect(() => {
+    // Only run if we're on the home page
+    if (location.pathname === '/') {
+      fetchAllCourses().then((res) => {
+        setAllCourses(res);
+      });
+    }
+  }, [location.pathname]);
+
+  return allCourses ? (
     <div className='py-16 md:px-40 px-8'>
 
       <h2 className='text-3xl font-medium text-gray-800'>Learn from the best</h2>
@@ -20,7 +31,7 @@ const CoursesSection = () => {
       <Link to={'/course-list'} onClick={() => scrollTo(0,0)} className='text-gray-500 border px-10 py-3 rounded hover:bg-gray-50 transition-all duration-300 border-gray-500/30'>Show all courses</Link>
 
     </div>
-  )
+  ) : <div></div>
 }
 
 export default CoursesSection

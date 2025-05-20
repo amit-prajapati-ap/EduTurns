@@ -3,8 +3,11 @@ import { assets } from "../../assets/assets";
 import { Link, useNavigate } from "react-router-dom";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 import { useDispatch, useSelector } from "react-redux";
+import { becomeEducator } from "../../utilityFunctions/apiCalls";
+import { setIsEducator } from "../../features/AppContextSlice";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const isCourseListPage = location.pathname.includes("/course-list");
   const { openSignIn } = useClerk();
   const { user } = useUser();
@@ -12,6 +15,16 @@ const Navbar = () => {
     (state) => state.appContext.appData.isEducator
   );
   const navigate = useNavigate();
+
+  const token = useSelector((state) => state.appContext.appData.getToken);
+
+  const callingBecomeEducator = () => {
+    if (token) {
+      becomeEducator(token, isEducator, navigate).then((res) => {
+        dispatch(setIsEducator(res));
+      });
+    }
+  };
 
   return (
     <div
@@ -30,7 +43,7 @@ const Navbar = () => {
           {user && (
             <>
               <button
-                onClick={() => navigate("/educator")}
+                onClick={callingBecomeEducator}
                 className="cursor-pointer"
               >
                 {isEducator ? "Educator Dashboard" : "Become Educator"}
@@ -57,7 +70,7 @@ const Navbar = () => {
           {user && (
             <>
               <button
-                onClick={() => navigate("/educator")}
+                onClick={callingBecomeEducator}
                 className="cursor-pointer text-center"
               >
                 {isEducator ? "Educator Dashboard" : "Become Educator"}

@@ -128,6 +128,7 @@ const getUserCourseProgress = asyncHandler(async (req, res) => {
         const userId = req.auth.userId
         const { courseId } = req.body
         const progressData = await CourseProgress.findOne({ userId, courseId })
+        console.log(progressData)
 
         res.status(200).json(new ApiResponse(200, progressData, "User course progress fetched successfully!"))
     } catch (error) {

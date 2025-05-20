@@ -1,5 +1,6 @@
-export const calculateRating = ( courseRatings ) => {
-    if(courseRatings.length === 0) {
+export const calculateRating = (courseRatings) => {
+
+    if (courseRatings.length === 0) {
         return 0;
     }
     let totalRating = 0;

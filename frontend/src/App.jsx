@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/student/Home";
 import CoursesList from "./pages/student/CoursesList";
@@ -17,11 +17,10 @@ import "quill/dist/quill.snow.css";
 import {
   setAllCourses,
   setIsEducator,
-  setToken,
   setUserData,
   setUserEnrolledCourses,
 } from "./features/AppContextSlice.js";
-import { useAuth, useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAllCourses,
@@ -121,20 +120,7 @@ const router = createBrowserRouter([
 
 const App = () => {
   const dispatch = useDispatch();
-
-  const { getToken } = useAuth();
   const { user } = useUser();
-  const fetchAndSetToken = () => {
-    return getToken().catch((error) => {
-      console.error("Failed to fetch token:", error);
-    });
-  };
-
-  fetchAndSetToken().then((token) => {
-    if (token) {
-      dispatch(setToken({ token, user }));
-    }
-  });
 
   //API Calls without token
   fetchAllCourses().then((res) => {
@@ -143,8 +129,10 @@ const App = () => {
 
   //API Calls with token
   const token = useSelector((state) => state.appContext.appData.getToken);
+  const hasFetched = useRef(false);
   useEffect(() => {
-    if (token) {
+    if (token && !hasFetched.current) {
+      hasFetched.current = true; // mark as done
       fetchUserData(token).then((res) => {
         if (user.publicMetadata.role === "educator") {
           dispatch(setIsEducator(true));

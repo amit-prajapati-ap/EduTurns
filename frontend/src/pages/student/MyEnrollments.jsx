@@ -3,26 +3,27 @@ import { useSelector } from 'react-redux'
 import { calculateCourseDuration } from '../../utilityFunctions/calculateCourseDuration'
 import { useNavigate } from 'react-router-dom'
 import {Line} from 'rc-progress'
+import { fetchCoursesProgress } from '../../utilityFunctions/apiCalls'
+import Loading from '../../components/student/Loading'
 
 const MyEnrollments = () => {
-  const enrolledCourses = useSelector((state) => state.appContext.appData.enrolledCourses)
-  const [progressArray, setProgressArray] = useState([
-    {lectureCompleted: 2, totalLecture: 4},
-    {lectureCompleted: 1, totalLecture: 5},
-    {lectureCompleted: 6, totalLecture: 6},
-    {lectureCompleted: 4, totalLecture: 4},
-    {lectureCompleted: 0, totalLecture: 3},
-    {lectureCompleted: 5, totalLecture: 7},
-    {lectureCompleted: 8, totalLecture: 8},
-    {lectureCompleted: 2, totalLecture: 6},
-  ])
+  const {enrolledCourses, getToken} = useSelector((state) => state.appContext.appData)
+  const [progressArray, setProgressArray] = useState(null)
   const navigate = useNavigate()
 
   const checkLectureCompleted = (index) => {
-    return progressArray[index] && progressArray[index].lectureCompleted / progressArray[index].totalLecture === 1;
+    return progressArray[index] && progressArray[index].lectureCompleted / progressArray[index].totalLectures === 1;
   }
 
-  return (
+  React.useEffect(() => {
+    if (enrolledCourses.length > 0) {      
+      fetchCoursesProgress({token: getToken, enrolledCourses}).then(res => {
+        setProgressArray(res)
+      })
+    }
+  }, [enrolledCourses])
+
+   return progressArray ? (
     <div className='xl:px-36 px-8 pt-10 min-h-[80vh]'>
       <h1 className='text-2xl font-semibold'>My Enrollments</h1>
       <table className='md:table-auto table-fixed w-full overflow-hidden border border-gray-500/20 mt-10'>
@@ -43,14 +44,14 @@ const MyEnrollments = () => {
                  md:w-28' />
                  <div className='flex-1'>
                   <p className='mb-1 max-sm:text-sm'>{course.courseTitle}</p>
-                  <Line strokeWidth={2} percent={progressArray[index] ? (progressArray[index].lectureCompleted * 100) / progressArray[index].totalLecture : 0} className='bg-gray-300 rounded-full' />
+                  <Line strokeWidth={2} percent={progressArray[index] ? (progressArray[index].lectureCompleted * 100) / progressArray[index].totalLectures : 0} className='bg-gray-300 rounded-full' />
                  </div>
               </td>
               <td className='px-4 py-3 max-sm:hidden'>
                 {calculateCourseDuration(course)}
               </td>
               <td className='px-4 py-3 max-sm:hidden'>
-                {progressArray[index] && `${progressArray[index].lectureCompleted} / ${progressArray[index].totalLecture}`} <span>Lectures</span>
+                {progressArray[index] && `${progressArray[index].lectureCompleted} / ${progressArray[index].totalLectures}`} <span>Lectures</span>
               </td>
               <td className='px-4 py-3 max-sm:text-right'>
                 <button onClick={() => navigate('/player/' + course._id)} className={`px-3 w-30 sm:px-5 py-1.5 sm:py-2  ${checkLectureCompleted(index) ? 'bg-green-500' : 'bg-yellow-500/80'} rounded-sm cursor-pointer max-sm:text-xs text-white`}>
@@ -62,7 +63,7 @@ const MyEnrollments = () => {
         </tbody>
       </table>
     </div>
-  )
+  ) : <Loading/>
 }
 
 export default MyEnrollments

@@ -7,15 +7,23 @@ import humanizeDuration from "humanize-duration";
 import YouTube from "react-youtube";
 import Loading from "../../components/student/Loading";
 import Rating from "../../components/student/Rating";
+import {
+  fetchSingleCourseProgress,
+  fetchUserEnrolledCourses,
+  markLectureAsCompleted,
+  rateTheCourse,
+} from "../../utilityFunctions/apiCalls";
 
 const Player = () => {
   const { courseId } = useParams();
   const [courseData, setCourseData] = useState(null);
-  const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
+  const [initialRating, setInitialRating] = useState(0);
   const [playerData, setPlayerData] = useState(null);
   const [openSection, setOpenSection] = useState({});
-  const allCourses = useSelector(
-    (state) => state.appContext.appData.allCourses
+  const [enrolledCourses, setEnrolledCourses] = useState(null);
+  const [islLectureCompleted, setIslLectureCompleted] = useState(null);
+  const { getToken, userData } = useSelector(
+    (state) => state.appContext.appData
   );
   let courseRating = null;
 
@@ -24,9 +32,39 @@ const Player = () => {
   }
 
   const fetchCourseData = () => {
-    if (allCourses) {
-      setCourseData(allCourses.find((course) => course._id === courseId));
+    if (enrolledCourses) {
+      enrolledCourses.map((course) => {
+        if (course._id === courseId) {
+          setCourseData(course);
+          course.courseRatings.map((item) => {
+            if (item.userId === userData._id) {
+              setInitialRating(item.rating);
+            }
+          });
+        }
+      });
     }
+  };
+
+  const handleRate = (rating) => {
+    rateTheCourse({ token: getToken, courseId, rating }).then((res) => {
+      res.map((course) => {
+        if (course._id === courseId) {
+          setCourseData(course);
+          setInitialRating(rating);
+        }
+      });
+    });
+  };
+
+  const handleMarkLectureAsCompleted = (lectureId) => {
+    markLectureAsCompleted({ token: getToken, lectureId, courseId }).then(
+      (res) => {
+        if (res) {
+          setIslLectureCompleted(res.lectureCompleted);
+        }
+      }
+    );
   };
 
   const toggleSection = (index) => {
@@ -34,12 +72,26 @@ const Player = () => {
   };
 
   useEffect(() => {
-    fetchCourseData();
-  }, [allCourses]);
+    if (enrolledCourses?.length > 0) {
+      fetchCourseData();
+    }
+  }, [enrolledCourses]);
+
+  useEffect(() => {
+    fetchSingleCourseProgress({ token: getToken, courseId }).then((res) => {
+      if (res) {
+        setIslLectureCompleted(res.lectureCompleted);
+      }
+    });
+  }, [courseData]);
+  useEffect(() => {
+    fetchUserEnrolledCourses(getToken).then((res) => {
+      setEnrolledCourses(res);
+    });
+  }, []);
 
   return courseData ? (
     <div className="min-h-[80vh] p-4 sm:p-10 flex flex-col-reverse md:grid md:grid-cols-2 gap-10 md:px-36">
-      {console.log(courseData.courseContent)}
       {/* Left Column */}
       <div className="text-gray-800">
         <h2 className="font-semibold text-xl">Course Structure</h2>
@@ -78,7 +130,12 @@ const Player = () => {
                   {chapter.chapterContent.map((lecture, i) => (
                     <li key={i} className="flex items-start gap-2 py-1">
                       <img
-                        src={false ? assets.blue_tick_icon : assets.play_icon}
+                        src={
+                          islLectureCompleted &&
+                          islLectureCompleted.includes(lecture.lectureId)
+                            ? assets.blue_tick_icon
+                            : assets.play_icon
+                        }
                         className="w-4 h-4 mt-1"
                       />
                       <div className="flex items-center justify-between w-full text-gray-800 text-xs md:text-default">
@@ -115,7 +172,7 @@ const Player = () => {
         </div>
         <div className="flex items-center gap-2 py-3 mt-10">
           <h1 className="text-xl font-bold">Rate this Course:</h1>
-          <Rating initialRating={0} />
+          <Rating initialRating={initialRating} onRate={handleRate} />
         </div>
       </div>
 
@@ -132,8 +189,21 @@ const Player = () => {
                 {playerData.chapter}.{playerData.lecture}{" "}
                 {playerData.lectureTitle}
               </p>
-              <button className="text-blue-600 cursor-pointer">
-                {false ? "Completed" : "Mark Complete"}
+              <button
+                onClick={() =>
+                  handleMarkLectureAsCompleted(playerData.lectureId)
+                }
+                className={
+                  islLectureCompleted &&
+                  islLectureCompleted.includes(playerData.lectureId)
+                    ? `text-green-600 cursor-pointer`
+                    : `text-blue-600 cursor-pointer`
+                }
+              >
+                {islLectureCompleted &&
+                islLectureCompleted.includes(playerData.lectureId)
+                  ? "Completed"
+                  : "Mark Complete"}
               </button>
             </div>
           </div>

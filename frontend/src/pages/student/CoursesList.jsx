@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import SearchBar from '../../components/student/SearchBar'
-import { useSelector } from 'react-redux'
 import CourseCard from '../../components/student/CourseCard'
+import { fetchAllCourses } from '../../utilityFunctions/apiCalls'
+import Loading from '../../components/student/Loading'
 
 const CoursesList = () => {
   const {input} = useParams()
-  const allCourses = useSelector((state) => state.appContext.appData.allCourses)
   const [filteredCourse, setFilteredCourse] = useState([])
+  const [allCourses, setAllCourses] = useState(null)
+  const location = useLocation();
+
+  useEffect(() => {
+    // Only run if we're on the home page
+    if (location.pathname === '/course-list') {
+      fetchAllCourses().then((res) => {
+        setAllCourses(res);
+      });
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     if (allCourses && allCourses.length > 0) {
@@ -41,9 +52,9 @@ const CoursesList = () => {
           </div>
         }
 
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 my-16 gap-5 px-2 md:p-0'>
+        {allCourses ? <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 my-16 gap-5 px-2 md:p-0'>
           {filteredCourse.map((course, index) => <CourseCard key={index} course={course}/>)}
-        </div>
+        </div> : <Loading/>}
       </div>
     </>
   )

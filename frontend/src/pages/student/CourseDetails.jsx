@@ -6,6 +6,7 @@ import { calculateChapterTime, calculateCourseDuration, calculateNoOfLectures, c
 import { assets } from '../../assets/assets'
 import humanizeDuration from 'humanize-duration'
 import YouTube from 'react-youtube'
+import { enrollCourse, fetchCourseData } from '../../utilityFunctions/apiCalls'
 
 const CourseDetails = () => {
   const {id} = useParams()
@@ -13,15 +14,11 @@ const CourseDetails = () => {
   const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false)
   const [playerData, setPlayerData] = useState(null)
   const [openSection, setOpenSection] = useState({})
-  const allCourses = useSelector((state) => state.appContext.appData.allCourses)
   let courseRating = null
+  const {userData, getToken } = useSelector(state => state.appContext.appData)
 
   if (courseData) {
     courseRating = calculateRating(courseData?.courseRatings)
-  }
-
-  const fetchCourseData = async () => {
-    setCourseData(allCourses.find(course => course._id === id))
   }
 
   const toggleSection = (index) => {
@@ -29,10 +26,24 @@ const CourseDetails = () => {
       {...prev, [index]: !prev[index]}
     ))
   }
+  
+  const fetchCourseDataMehod = () => {
+    fetchCourseData(id).then(res => {
+      setCourseData(res)
+    })
+  }
+  const enrollCourseNow = () => {
+    enrollCourse({isAlreadyEnrolled, userData, token: getToken, courseData})
+  }
+  useEffect(() => {
+    fetchCourseDataMehod()
+  }, [])
 
   useEffect(() => {
-    fetchCourseData()
-  }, [allCourses])
+    if (userData && courseData) {
+      setIsAlreadyEnrolled(userData.enrolledCourses.includes(courseData._id))
+    }
+  }, [userData, courseData])
 
   return courseData ? (
     <>
@@ -57,7 +68,7 @@ const CourseDetails = () => {
             <p>{courseData.enrolledStudents.length}{courseData.enrolledStudents.length > 1 ? 'students' : 'student'}</p>
           </div>
 
-          <p className='text-sm'>Course by <span className='text-blue-600 underline'>EduTurns</span></p>
+          <p className='text-sm'>Course by <span className='text-blue-600 underline'>{courseData.educator.name}</span></p>
 
           <div className='pt-8 text-gray-800'>
               <h2 className='font-semibold text-xl'>Course Structure</h2>
@@ -141,7 +152,7 @@ const CourseDetails = () => {
               </div>
             </div>
 
-            <button className='md:mt-6 mt-4 w-full py-3 rounded bg-blue-600 text-white font-medium cursor-pointer'>{isAlreadyEnrolled ? 'Already Enrolled' : 'Enroll Now'}</button>
+            <button onClick={enrollCourseNow} className='md:mt-6 mt-4 w-full py-3 rounded bg-blue-600 text-white font-medium cursor-pointer'>{isAlreadyEnrolled ? 'Already Enrolled' : 'Enroll Now'}</button>
 
             <div className='pt-6'>
               <p className='md:text-xl text-lg font-medium text-gray-800'>What's in the course?</p>

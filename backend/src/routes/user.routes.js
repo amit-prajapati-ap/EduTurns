@@ -5,7 +5,7 @@ const router = Router()
 
 router.route('/data').get(getUserData)
 router.route('/enrolled-courses').get(getUserEnrolledCourses)
-router.route('/get-course-progress').get(getUserCourseProgress)
+router.route('/get-course-progress').post(getUserCourseProgress)
 
 router.route('/update-course-progress').post(updateUserCourseProgress)
 router.route('/purchase').post(purchaseCourse)
