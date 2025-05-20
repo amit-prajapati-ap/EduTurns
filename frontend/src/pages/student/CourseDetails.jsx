@@ -113,7 +113,7 @@ const CourseDetails = () => {
         </div>
 
         {/* Right Column */}
-        <div className='shadow-custom-card z-10 rounded-t md:rounded-none overflow-hidden w-full bg-white min-w-[300px] sm:min-w-[420px]'>
+        <div className='shadow-custom-card z-10 rounded-t md:rounded-none overflow-hidden w-[50%] bg-white min-w-[300px] sm:min-w-[420px]'>
           {
             playerData ? <YouTube videoId={playerData.videoId} opts={{playerVars: {
               autoplay: 1

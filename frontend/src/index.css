@@ -58,3 +58,18 @@
 .rich-text ul { margin-left: 30px; list-style-type: disc; }
 
 .rich-text li { margin-bottom: 8px; }
+
+@layer components {
+  .custom-slider .slick-slide {
+    opacity: 0.5;
+    transform: scale(0.9);
+    transition: all 0.4s ease;
+    cursor: grab;
+  }
+
+  .custom-slider .slick-center {
+    opacity: 1 !important;
+    transform: scale(1.1) !important;
+    z-index: 10;
+  }
+}

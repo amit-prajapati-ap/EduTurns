@@ -28,6 +28,8 @@ import {
   fetchUserEnrolledCourses,
 } from "./utilityFunctions/apiCalls.js";
 import { ToastContainer } from "react-toastify";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const router = createBrowserRouter([
   {
