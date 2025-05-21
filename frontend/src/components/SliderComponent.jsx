@@ -57,7 +57,7 @@ function CenterMode({ allCourses }) {
   const settings = {
     className: "center",
     centerMode: true,
-    infinite: true,
+    infinite: allCourses.length > 3,
     centerPadding: "60px",
     slidesToShow: 3,
     speed: 500,
@@ -85,6 +85,7 @@ function CenterMode({ allCourses }) {
   },
 ]
   };
+
   return (
     <div className="slider-container custom-slider">
       <Slider {...settings}>

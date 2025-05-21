@@ -14,12 +14,6 @@ const MyEnrollments = () => {
   const navigate = useNavigate()
 
   const [dataFound, setDataFound] = useState(true)
-  
-    setTimeout(() => {
-      if (!progressArray || progressArray.length === 0) {
-        setDataFound(false)
-      }
-    }, 5000);
 
   const checkLectureCompleted = (index) => {
     return progressArray[index] && progressArray[index].lectureCompleted / progressArray[index].totalLectures === 1;
@@ -37,6 +31,16 @@ const MyEnrollments = () => {
       })
     }
   }, [enrolledCourses])
+
+  React.useEffect(() => {
+      const timer = setTimeout(() => {
+        if (!progressArray || progressArray.length === 0) {
+          setDataFound(false);
+        }
+      }, 5000);
+  
+      return () => clearTimeout(timer); // Clean up the timer on unmount
+    }, [progressArray]);
 
    return dataFound ? (progressArray ? (
     <div className='xl:px-36 px-8 pt-10 min-h-[80vh]'>
