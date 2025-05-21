@@ -12,7 +12,7 @@ const updateRoleToEducator = asyncHandler(async (req, res) => {
         const userId = req.auth.userId || req.headers.userId
 
         if (!userId) {
-           return res.status(401).json(new ApiError(401, `Unauthorized Access`))
+            return res.status(401).json(new ApiError(401, `Unauthorized Access`))
         }
 
         await clerkClient.users.updateUserMetadata(userId, {
@@ -31,19 +31,21 @@ const addCourse = async (req, res) => {
     try {
         const { courseData } = req?.body || { courseData: "" }
         const educatorId = req.auth.userId
-        let courseThumbnailLocalPath
+        let courseThumbnailBuffer;
 
         if (!courseData) {
-           return res.status(400).json(new ApiError(400, `Course data is required`))
+            return res.status(400).json(new ApiError(400, `Course data is required`));
         }
 
-        if (req.files && req.files.courseThumbnail && req.files.courseThumbnail[0].path) {
-            courseThumbnailLocalPath = req.files?.courseThumbnail[0]?.path
+        if (req.files?.courseThumbnail?.[0]?.buffer) {
+            courseThumbnailBuffer = req.files.courseThumbnail[0].buffer;
         }
 
-        if (!courseThumbnailLocalPath) {
-           return res.status(400).json(new ApiError(400, `Thumbnail not attached`))
+        if (!courseThumbnailBuffer) {
+            return res.status(400).json(new ApiError(400, `Thumbnail not attached`));
         }
+
+        const courseThumbnail = await uploadOnCloudinary(courseThumbnailBuffer);
 
         const parsedCourseData = await JSON.parse(courseData)
 
@@ -51,10 +53,8 @@ const addCourse = async (req, res) => {
 
         const newCourse = await Course.create(parsedCourseData)
 
-        const courseThumbnail = await uploadOnCloudinary(courseThumbnailLocalPath)
-
         if (!courseThumbnail) {
-           return res.status(400).json(new ApiError(400, `Error while uploading course thumbnail`))
+            return res.status(400).json(new ApiError(400, `Error while uploading course thumbnail`))
         }
 
         newCourse.courseThumbnail = courseThumbnail.url

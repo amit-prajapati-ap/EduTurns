@@ -13,12 +13,6 @@ const CoursesList = () => {
   const location = useLocation();
   const [dataFound, setDataFound] = useState(true)
 
-  setTimeout(() => {
-    if (!allCourses || allCourses.length === 0) {
-      setDataFound(false)
-    }
-  }, 5000);
-
   useEffect(() => {
     // Only run if we're on the home page
     if (location.pathname === '/course-list') {
@@ -41,6 +35,16 @@ const CoursesList = () => {
       ;
     }
   }, [allCourses, input])
+
+  useEffect(() => {
+      const timer = setTimeout(() => {
+        if (!allCourses || allCourses.length === 0) {
+          setDataFound(false);
+        }
+      }, 5000);
+  
+      return () => clearTimeout(timer); // Clean up the timer on unmount
+    }, [allCourses]);
 
   return (
     <>

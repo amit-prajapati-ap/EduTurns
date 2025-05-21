@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import CourseCard from "./student/CourseCard";
 
@@ -42,7 +42,7 @@ function SamplePrevArrow(props) {
         width: "40px",
         height: "40px",
         left: "-20px",
-        zIndex: 10
+        zIndex: 10,
       }}
       onClick={onClick}
     >
@@ -51,15 +51,25 @@ function SamplePrevArrow(props) {
   );
 }
 
-
 function CenterMode({ allCourses }) {
-    const [centerIndex, setCenterIndex] = useState(0);
+  const [centerIndex, setCenterIndex] = useState(0);
+  const [slides, setSlides] = useState(0);
+  useEffect(() => {
+    if (allCourses.length === 1) {
+      setSlides(1);
+    } else if (allCourses.length === 2) {
+      setSlides(2);
+    } else {
+      setSlides(3);
+    }
+  }, []);
+
   const settings = {
     className: "center",
     centerMode: true,
-    infinite: allCourses.length > 3,
+    infinite: true,
     centerPadding: "60px",
-    slidesToShow: 3,
+    slidesToShow: slides,
     speed: 500,
     dots: true,
     nextArrow: <SampleNextArrow />,
@@ -69,21 +79,21 @@ function CenterMode({ allCourses }) {
       setCenterIndex(newIndex);
     },
     responsive: [
-  {
-    breakpoint: 768,
-    settings: {
-      slidesToShow: 1,
-      centerPadding: "30px",
-    },
-  },
-  {
-    breakpoint: 1024,
-    settings: {
-      slidesToShow: 2,
-      centerPadding: "40px",
-    },
-  },
-]
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: "30px",
+        },
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          centerPadding: "40px",
+        },
+      },
+    ],
   };
 
   return (
