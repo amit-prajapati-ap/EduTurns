@@ -8,7 +8,7 @@ const CourseCard = ({ course, isClickable }) => {
 
   const content = (
     <div>
-      <img src={course?.courseThumbnail} className="w-full" />
+      <img src={course?.courseThumbnail} className="w-full h-40" />
       <div className="p-3 text-left h-30 flex flex-col justify-between">
         <h3 className="text-base font-semibold line-clamp-1">
           {course?.courseTitle}
