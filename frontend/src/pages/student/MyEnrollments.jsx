@@ -5,12 +5,21 @@ import { useNavigate } from 'react-router-dom'
 import {Line} from 'rc-progress'
 import { fetchCoursesProgress, fetchUserEnrolledCourses } from '../../utilityFunctions/apiCalls'
 import Loading from '../../components/student/Loading'
+import DataNotFound from '../../components/DataNotFound'
 
 const MyEnrollments = () => {
   const { getToken } = useSelector((state) => state.appContext.appData)
   const [enrolledCourses, setEnrolledCourses] = useState([])
   const [progressArray, setProgressArray] = useState(null)
   const navigate = useNavigate()
+
+  const [dataFound, setDataFound] = useState(true)
+  
+    setTimeout(() => {
+      if (!progressArray || progressArray.length === 0) {
+        setDataFound(false)
+      }
+    }, 5000);
 
   const checkLectureCompleted = (index) => {
     return progressArray[index] && progressArray[index].lectureCompleted / progressArray[index].totalLectures === 1;
@@ -29,7 +38,7 @@ const MyEnrollments = () => {
     }
   }, [enrolledCourses])
 
-   return progressArray ? (
+   return dataFound ? (progressArray ? (
     <div className='xl:px-36 px-8 pt-10 min-h-[80vh]'>
       <h1 className='text-2xl font-semibold'>My Enrollments</h1>
       <table className='md:table-auto table-fixed w-full overflow-hidden border border-gray-500/20 mt-10'>
@@ -69,7 +78,7 @@ const MyEnrollments = () => {
         </tbody>
       </table>
     </div>
-  ) : <Loading/>
+  ) : <Loading/>) : <DataNotFound/>
 }
 
 export default MyEnrollments

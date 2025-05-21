@@ -7,6 +7,7 @@ import { assets } from '../../assets/assets'
 import humanizeDuration from 'humanize-duration'
 import YouTube from 'react-youtube'
 import { enrollCourse, fetchCourseData } from '../../utilityFunctions/apiCalls'
+import DataNotFound from '../../components/DataNotFound'
 
 const CourseDetails = () => {
   const {id} = useParams()
@@ -20,6 +21,14 @@ const CourseDetails = () => {
   if (courseData) {
     courseRating = calculateRating(courseData?.courseRatings)
   }
+
+  const [dataFound, setDataFound] = useState(true)
+  
+    setTimeout(() => {
+      if (!courseData) {
+        setDataFound(false)
+      }
+    }, 5000);
 
   const toggleSection = (index) => {
     setOpenSection((prev) => (
@@ -45,7 +54,7 @@ const CourseDetails = () => {
     }
   }, [userData, courseData])
 
-  return courseData ? (
+  return dataFound ? (courseData ? (
     <>
       <div className='flex md:flex-row flex-col-reverse gap-10 relative items-start justify-between px-8 xl:px-36 md:pt-10 pt-5 text-left min-h-[80vh]'>
         <div className='h-[500px] absolute top-0 left-0 w-full z-1 bg-gradient-to-b from-cyan-100/70'></div>      
@@ -168,7 +177,7 @@ const CourseDetails = () => {
         </div>
       </div>
     </>
-  ) : <Loading/>
+  ) : <Loading/>) : <DataNotFound/>
 }
 
 export default CourseDetails

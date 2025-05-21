@@ -17,7 +17,7 @@ const CoursesSection = () => {
     }
   }, [location.pathname]);
 
-  return allCourses ? (
+  return (allCourses && allCourses.length != 0) ? (
     <div className='py-16 md:px-40 px-8'>
 
       <h2 className='text-3xl font-medium text-gray-800'>Learn from the best</h2>

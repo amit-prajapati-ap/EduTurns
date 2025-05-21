@@ -13,6 +13,7 @@ import {
   markLectureAsCompleted,
   rateTheCourse,
 } from "../../utilityFunctions/apiCalls";
+import DataNotFound from "../../components/DataNotFound";
 
 const Player = () => {
   const { courseId } = useParams();
@@ -26,6 +27,14 @@ const Player = () => {
     (state) => state.appContext.appData
   );
   let courseRating = null;
+
+  const [dataFound, setDataFound] = useState(true)
+  
+    setTimeout(() => {
+      if (!courseData) {
+        setDataFound(false)
+      }
+    }, 5000);
 
   if (courseData) {
     courseRating = calculateRating(courseData?.courseRatings);
@@ -90,7 +99,7 @@ const Player = () => {
     });
   }, []);
 
-  return courseData ? (
+  return dataFound ? (courseData ? (
     <div className="min-h-[80vh] p-4 sm:p-10 flex flex-col-reverse md:grid md:grid-cols-2 gap-10 md:px-36">
       {/* Left Column */}
       <div className="text-gray-800">
@@ -214,7 +223,7 @@ const Player = () => {
     </div>
   ) : (
     <Loading />
-  );
+  )) : <DataNotFound/>;
 };
 
 export default Player;
