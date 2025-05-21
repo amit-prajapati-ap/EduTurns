@@ -11,7 +11,7 @@ const AddCourse = () => {
   const editorRef = useRef(null);
   const [adding, setAdding] = useState(false);
   const [courseTitle, setCourseTitle] = useState("");
-  const [coursePrice, setCoursePrice] = useState(0);
+  const [coursePrice, setCoursePrice] = useState(50);
   const [discount, setDiscount] = useState(0);
   const [image, setImage] = useState(null);
   const [chapters, setChapters] = useState([]);
@@ -23,6 +23,7 @@ const AddCourse = () => {
     lectureUrl: "",
     isPreviewFree: false,
   });
+
   const token = useSelector((state) => state.appContext.appData.getToken);
 
   const handleChapter = (action, chapterId) => {
@@ -105,8 +106,16 @@ const AddCourse = () => {
   };
 
   const handleSubmit = async (e) => {
-    setAdding(true);
     e.preventDefault();
+    const discountAmount = (coursePrice * discount) / 100;
+    const finalAmount = coursePrice - discountAmount;
+
+    if (parseFloat(finalAmount.toFixed(2)) < 50) {
+      toast.error("Discounted price is not less than 50₹")
+      return
+    }
+    
+    setAdding(true);
     const courseData = {
       courseTitle,
       courseDescription: quillRef.current.root.innerHTML,
@@ -165,12 +174,13 @@ const AddCourse = () => {
 
         <div className="flex items-center justify-between flex-wrap">
           <div className="flex flex-col gap-1">
-            <p>Course Price</p>
+            <p>Course Price ₹</p>
             <input
               onChange={(e) => setCoursePrice(e.target.value)}
               value={coursePrice}
               type="number"
-              placeholder="0"
+              min={50}
+              placeholder="50"
               className="outline-none md:py-2.5 py-2 w-28 px-3 rounded border border-gray-500"
               required
             />

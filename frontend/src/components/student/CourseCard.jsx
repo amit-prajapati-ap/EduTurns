@@ -44,7 +44,7 @@ const CourseCard = ({ course, isClickable }) => {
     <Link
       to={"/course/" + course._id}
       onClick={() => scrollTo(0, 0)}
-      className="borser border-gray-500/30 pb-6 overflow-hidden rounded-lg shadow-2xl hover:shadow-md hover:shadow-cyan-300 transition-all duration-300 hover:scale-105"
+      className="borser border-gray-500/30 pb-6 overflow-hidden rounded-lg shadow-2xl hover:shadow-md hover:shadow-cyan-300 transition-all duration-300"
     >{content}</Link>
   ) : (
     <div className="pointer-events-none">{content}</div>

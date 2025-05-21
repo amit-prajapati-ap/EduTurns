@@ -7,6 +7,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import Stripe from 'stripe'
+import { getINRtoUSDRate } from "../utils/exchangeRate.js";
 
 const getUserData = asyncHandler(async (req, res) => {
     try {
@@ -66,7 +67,9 @@ const purchaseCourse = asyncHandler(async (req, res) => {
         // Stripe gateway initialize
         const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY)
 
+        const exchangeRateUSD = await getINRtoUSDRate()
         const currency = CURRENCY.toLowerCase()
+        const amountInUSD = Number(newPurchase.amount) * exchangeRateUSD;
 
         //Creating line items to for Stripe
         const line_items = [{
@@ -75,7 +78,7 @@ const purchaseCourse = asyncHandler(async (req, res) => {
                 product_data: {
                     name: courseData.courseTitle
                 },
-                unit_amount: Math.floor(newPurchase.amount) * 100
+                unit_amount: Math.round(amountInUSD * 100)
             },
             quantity: 1
         }]
@@ -89,6 +92,7 @@ const purchaseCourse = asyncHandler(async (req, res) => {
                 purchaseId: newPurchase._id.toString()
             }
         })
+
         if (!session) {
             return res.status(501).json(new ApiError(501, `Purchase failed and session not be created`))
         }

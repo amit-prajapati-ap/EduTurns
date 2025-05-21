@@ -53,7 +53,7 @@ const CoursesList = () => {
         }
 
         {allCourses ? <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 my-16 gap-5 px-2 md:p-0'>
-          {filteredCourse.map((course, index) => <CourseCard key={index} course={course}/>)}
+          {filteredCourse.map((course, index) => <CourseCard key={index} course={course} isClickable={true}/>)}
         </div> : <Loading/>}
       </div>
     </>

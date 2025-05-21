@@ -92,7 +92,7 @@ function CenterMode({ allCourses }) {
           const isCenter = index === centerIndex; // adjust offset depending on slick behavior
           return (
             <div className="px-2" key={index}>
-              <div className="transform transition-transform duration-300 ease-in-out hover:scale-105">
+              <div>
                 <CourseCard course={course} isClickable={isCenter} />
               </div>
             </div>
