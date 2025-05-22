@@ -50,3 +50,20 @@ EduTurns is a full-stack web application designed to provide students with a pla
 
 ## 📁 Project Structure
 
+EduTurns/
+├── frontend/
+│ ├── public/
+│ ├── src/
+│ │ ├── components/
+│ │ ├── pages/
+│ │ ├── services/
+│ │ └── App.js
+│ └── tailwind.config.js
+├── backend/
+│ ├── config/
+│ ├── controllers/
+│ ├── models/
+│ ├── routes/
+│ ├── middleware/
+│ └── server.js
+└── README.md
