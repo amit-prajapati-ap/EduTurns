@@ -106,7 +106,7 @@ const Player = () => {
 
   return dataFound ? (
     courseData ? (
-      <div className="min-h-[80vh] p-4 sm:p-10 flex flex-col-reverse md:grid md:grid-cols-2 gap-10 md:px-36">
+      <div className="max-w-[2400px] mx-auto p-4 sm:p-10 flex flex-col-reverse 2xl:grid 2xl:grid-cols-2 gap-10 2xl:px-36">
         {/* Left Column */}
         <div className="text-gray-800">
           <h2 className="font-semibold text-xl">Course Structure</h2>
@@ -197,7 +197,7 @@ const Player = () => {
             <div className="md:mt-10">
               <YouTube
                 videoId={playerData.lectureUrl.split("/").pop()}
-                iframeClassName="w-full aspect-video"
+                iframeClassName="w-full h-fyll aspect-video"
               />
               <div className="flex justify-between items-center mt-1">
                 <p>

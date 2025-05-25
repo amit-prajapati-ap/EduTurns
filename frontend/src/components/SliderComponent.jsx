@@ -14,15 +14,15 @@ function SampleNextArrow(props) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "black", // Tailwind gray-200
-        borderRadius: "9999px",
-        width: "40px",
-        height: "40px",
-        right: "-20px", // adjust spacing from content
+        width: "120px",
+        height: "80px",
+        right: "-65px", 
+        cursor: "pointer",
+        top:"35%"
       }}
       onClick={onClick}
     >
-      <FaChevronRight color="#000" />
+      <FaChevronRight color="gray" size={50} />
     </div>
   );
 }
@@ -37,16 +37,15 @@ function SamplePrevArrow(props) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "black",
-        borderRadius: "9999px",
-        width: "40px",
-        height: "40px",
-        left: "-20px",
-        zIndex: 10,
+        width: "120px",
+        height: "80px",
+        left: "-85px", 
+        cursor: "pointer",
+        top:"35%"
       }}
       onClick={onClick}
     >
-      <FaChevronLeft color="white" />
+      <FaChevronLeft color="gray" size={50} />
     </div>
   );
 }
@@ -68,7 +67,7 @@ function CenterMode({ allCourses }) {
     className: "center",
     centerMode: true,
     infinite: true,
-    centerPadding: "60px",
+    centerPadding: "0px",
     slidesToShow: slides,
     speed: 500,
     dots: true,
@@ -80,24 +79,24 @@ function CenterMode({ allCourses }) {
     },
     responsive: [
       {
-        breakpoint: 768,
+        breakpoint: 685,
         settings: {
           slidesToShow: 1,
-          centerPadding: "30px",
+          centerPadding: "0px",
         },
       },
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 2,
-          centerPadding: "40px",
+          slidesToShow: 3,
+          centerPadding: "5px",
         },
       },
     ],
   };
 
   return (
-    <div className="slider-container custom-slider">
+    <div className="slider-container custom-slider mb-4 max-w-[1200px]">
       <Slider {...settings}>
         {allCourses.slice(0, 4).map((course, index) => {
           const isCenter = index === centerIndex; // adjust offset depending on slick behavior

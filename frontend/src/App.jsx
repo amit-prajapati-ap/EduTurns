@@ -30,6 +30,8 @@ import {
 import { ToastContainer } from "react-toastify";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import AboutUs from "./components/AboutUs.jsx";
+import ContactUs from "./components/ContactUs.jsx";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +39,22 @@ const router = createBrowserRouter([
     element: (
       <Layout>
         <Home />
+      </Layout>
+    ),
+  },
+  {
+    path: "/about",
+    element: (
+      <Layout>
+        <AboutUs />
+      </Layout>
+    ),
+  },
+  {
+    path: "/contact",
+    element: (
+      <Layout>
+        <ContactUs />
       </Layout>
     ),
   },

@@ -7,8 +7,8 @@ const CourseCard = ({ course, isClickable }) => {
   const courseRating = calculateRating(course.courseRatings);
 
   const content = (
-    <div>
-      <img src={course?.courseThumbnail} className="w-full h-40" />
+    <div className="p-4">
+      <img src={course?.courseThumbnail} className="w-full h-50 2xl:h-60" />
       <div className="p-3 text-left h-30 flex flex-col justify-between">
         <h3 className="text-base font-semibold line-clamp-1">
           {course?.courseTitle}
@@ -44,8 +44,7 @@ const CourseCard = ({ course, isClickable }) => {
     <Link
       to={"/course/" + course._id}
       onClick={() => scrollTo(0, 0)}
-      className="borser border-gray-500/30 pb-6 overflow-hidden rounded-lg shadow-2xl hover:shadow-md hover:shadow-cyan-300 transition-all duration-300"
-    >{content}</Link>
+    ><div className="borser pt-4 border-gray-500/30 overflow-hidden rounded-lg transition-all duration-300">{content}</div></Link>
   ) : (
     <div className="pointer-events-none">{content}</div>
   );

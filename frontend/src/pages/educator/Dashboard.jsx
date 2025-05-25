@@ -13,7 +13,6 @@ const Dashboard = () => {
   useEffect(() => {
     if (isEducator) {
       fetchDashboardData({token: getToken}).then(res => {
-        console.log(res)
         setDashboardData(res)
       })
     }

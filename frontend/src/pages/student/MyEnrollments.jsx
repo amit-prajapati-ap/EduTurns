@@ -43,14 +43,14 @@ const MyEnrollments = () => {
     }, [progressArray]);
 
    return dataFound ? (progressArray ? (
-    <div className='xl:px-36 px-8 pt-10 min-h-[80vh]'>
+    <div className='xl:px-36 pl-3 md:px-8 pt-10 min-h-[80vh]'>
       <h1 className='text-2xl font-semibold'>My Enrollments</h1>
       <table className='md:table-auto table-fixed w-full overflow-hidden border border-gray-500/20 mt-10'>
-        <thead className='text-gray-900 border-b border-gray-500/20 text-sm text-left max-sm:hidden'>
+        <thead className='text-gray-900 border-b border-gray-500/20 text-sm text-left'>
           <tr>
             <th className='px-4 py-3 font-semibold truncate'>Course</th>
-            <th className='px-4 py-3 font-semibold truncate'>Duration</th>
-            <th className='px-4 py-3 font-semibold truncate'>Completed</th>
+            <th className='px-4 py-3 font-semibold truncate max-sm:hidden'>Duration</th>
+            <th className='px-4 py-3 font-semibold truncate max-sm:hidden'>Completed</th>
             <th className='px-4 py-3 font-semibold truncate'>Status</th>
           </tr>
         </thead>
@@ -72,7 +72,7 @@ const MyEnrollments = () => {
               <td className='px-4 py-3 max-sm:hidden'>
                 {progressArray[index] && `${progressArray[index].lectureCompleted} / ${progressArray[index].totalLectures}`} <span>Lectures</span>
               </td>
-              <td className='px-4 py-3 max-sm:text-right'>
+              <td className='px-4 py-3 text-left '>
                 <button onClick={() => navigate('/player/' + course._id)} className={`px-3 w-30 sm:px-5 py-1.5 sm:py-2  ${checkLectureCompleted(index) ? 'bg-green-500' : 'bg-yellow-500/80'} rounded-sm cursor-pointer max-sm:text-xs text-white`}>
                 {checkLectureCompleted(index) ? 'Completed' : 'On Going'}
                 </button>
