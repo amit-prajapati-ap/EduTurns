@@ -287,6 +287,13 @@ const CourseDetails = () => {
                   <li>Certificate of completion.</li>
                 </ul>
               </div>
+
+              <div className="mt-4 border p-3 rounded-md border-red-500 text-gray-600 bg-gray-100">
+                <h2 className="text-black font-semibold text-lg">Note: Use These Info For Testing -</h2>
+                <p>Card Number : 4242 4242 4242 4242</p>
+                <p>Expire data : 02/28</p>
+                <p>CVV: 123</p>
+              </div>
             </div>
           </div>
         </div>
