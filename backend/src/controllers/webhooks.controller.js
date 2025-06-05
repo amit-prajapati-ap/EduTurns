@@ -6,6 +6,7 @@ import { asyncHandler } from '../utils/asyncHandler.js'
 import Stripe from 'stripe'
 import { Purchase } from '../models/purchase.model.js'
 import { Course } from '../models/course.model.js'
+import { CourseProgress } from '../models/courseProgress.models.js'
 
 //API Controller Function to Manage Clerk user with db
 
@@ -47,6 +48,13 @@ const clerkWebhooks = asyncHandler(async (req, res) => {
                 }
             case 'user.deleted':
                 {
+                    const courses = await Course.find({ educator: data.id })
+                    await Promise.all(
+                        courses.map(course =>
+                            CourseProgress.deleteMany({ courseId: course._id })
+                        )
+                    );
+                    await Course.deleteMany({ educator: data.id })
                     await User.findByIdAndDelete(data.id)
                     res.json(new ApiResponse(200, {}, "User deleted Successfully"))
                     break;
